@@ -31,7 +31,11 @@ const Upload = (props: Props) => {
         console.log(`File uploaded successfully with key: ${key}`)
       );
     } catch (error) {
-      setError(error.message);
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("An unknown error occurred");
+      }
     }
   };
 
