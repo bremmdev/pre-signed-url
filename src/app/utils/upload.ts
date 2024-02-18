@@ -29,7 +29,9 @@ export const uploadToAzure = async (file: File) => {
 
   //upload the file to azure
   const blockBlobClient = new BlockBlobClient(uploadUrl);
-  const uploadRes = await blockBlobClient.uploadData(file);
+  const uploadRes = await blockBlobClient.uploadData(file, {
+    tags: { source: "client" },
+  });
 
   if(uploadRes._response.status !== 201) throw new Error("Error uploading file");
   

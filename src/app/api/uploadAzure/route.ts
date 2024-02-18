@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
   const containerSAS = generateBlobSASQueryParameters(
     {
       containerName: process.env.AZURE_CONTAINER as string,
-      permissions: ContainerSASPermissions.parse("w"), //write permission
+      permissions: ContainerSASPermissions.parse("wt"), //write + tags permission
       expiresOn: new Date(new Date().valueOf() + 60 * 1000), //expires in 60 seconds
     },
     sharedKeyCredential
