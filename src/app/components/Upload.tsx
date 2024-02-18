@@ -1,14 +1,15 @@
 "use client";
 
 import React from "react";
-import { uploadToS3 } from "@/app/utils/upload";
+import { uploadToS3, uploadToAzure } from "@/app/utils/upload";
 
 type Props = {
   maxFileCount?: number;
+  provider: "aws" | "azure";
 };
 
 const Upload = (props: Props) => {
-  const { maxFileCount = 1 } = props;
+  const { maxFileCount = 1, provider } = props;
 
   const [error, setError] = React.useState<string | null>(null);
 
@@ -25,7 +26,16 @@ const Upload = (props: Props) => {
     }
 
     try {
-      const uploadPromises = Array.from(files).map((file) => uploadToS3(file));
+      let uploadPromises: Array<Promise<string>>;
+      if (provider === "aws") {
+         uploadPromises = Array.from(files).map((file) =>
+          uploadToS3(file)
+        );
+      } else {
+         uploadPromises = Array.from(files).map((file) =>
+          uploadToAzure(file)
+        );
+      }
       const keys = await Promise.all(uploadPromises);
       keys.forEach((key) =>
         console.log(`File uploaded successfully with key: ${key}`)
